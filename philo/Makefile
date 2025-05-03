@@ -8,10 +8,10 @@ PHILO= philo
 all: $(PHILO)
 
 $(PHILO) : $(OBJ)
-	@$(CC) $(CFLAGS) $(OBJ) -o $(PHILO)
+	$(CC) $(CFLAGS) -g -fsanitize=thread $(OBJ) -o $(PHILO)
 
 %.o: %.c philo.h
-	@$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm -rf $(OBJ)

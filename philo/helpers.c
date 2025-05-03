@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:10:40 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/03 09:39:16 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/03 16:00:14 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,11 @@ long	ft_atoi(char *arg)
 
 void	print_state(char *msg, t_philo *philo, t_data *data)
 {
-	if (!data->stop && philo->print)
+	if (!data->stop)
 	{
 		pthread_mutex_lock(&data->print);
-		printf("%zu %d %s\n", get_current_time(data), philo->id, msg);
+		if (!data->stop)
+			printf("%zu %d %s\n", get_current_time(data), philo->id, msg);
 		pthread_mutex_unlock(&data->print);
 	}
 }
