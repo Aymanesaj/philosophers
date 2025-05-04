@@ -6,16 +6,11 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:08:05 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/03 16:11:00 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/04 20:28:23 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-// void	deadlock_prevention()
-// {
-// 	if ()
-// }
 
 void	*routine(void *arg)
 {
@@ -26,17 +21,16 @@ void	*routine(void *arg)
 	data = philo->data;
 	while (!data->stop)
 	{
-		if (philo->id % 2 == 1)
-		{
-			if (philo->l_fork != philo->r_fork)
-				ft_usleep(100);
-			else
-				return (print_state("has taken a fork", philo, data), NULL);
-		}
+		if (philo->l_fork == philo->r_fork)
+			return (print_state("has taken a fork", philo, data), NULL);
+		if (philo->id % 2 == 0)
+			ft_usleep(10);
+		pthread_mutex_lock(&data->waiter);
 		pthread_mutex_lock(philo->l_fork);
 		print_state("has taken a fork", philo, data);
 		pthread_mutex_lock(philo->r_fork);
 		print_state("has taken a fork", philo, data);
+		pthread_mutex_unlock(&data->waiter);
 		pthread_mutex_lock(&data->monitor);
 		philo->last_meal = get_current_time(data);
 		philo->meals_eaten++;

@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:58:29 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/03 16:08:54 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/03 19:01:59 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_data
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
 	pthread_mutex_t	monitor;
+	pthread_mutex_t	waiter;
 	pthread_t		*threads;
 	bool			stop;
 	long			first_fork;
