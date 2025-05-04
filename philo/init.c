@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:08:05 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/04 20:28:23 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/04 22:51:33 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,20 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 	data = philo->data;
+	data->start = true;
+	if (philo->id % 2 == 0)
+		ft_usleep(10);
 	while (!data->stop)
 	{
-		if (philo->l_fork == philo->r_fork)
-			return (print_state("has taken a fork", philo, data), NULL);
-		if (philo->id % 2 == 0)
-			ft_usleep(10);
-		pthread_mutex_lock(&data->waiter);
 		pthread_mutex_lock(philo->l_fork);
 		print_state("has taken a fork", philo, data);
+		if (philo->l_fork == philo->r_fork)
+		{
+			pthread_mutex_unlock(philo->l_fork);
+			break ;
+		}
 		pthread_mutex_lock(philo->r_fork);
 		print_state("has taken a fork", philo, data);
-		pthread_mutex_unlock(&data->waiter);
 		pthread_mutex_lock(&data->monitor);
 		philo->last_meal = get_current_time(data);
 		philo->meals_eaten++;
@@ -61,19 +63,24 @@ void	*monitoring(void *arg)
 		while (i < data->philo_count)
 		{
 			pthread_mutex_lock(&data->monitor);
-			if (data->meals_max >= 0 && philo[i].meals_eaten >= data->meals_max)
-				j++;
 			if (get_current_time(data) - philo[i].last_meal >= data->time_to_die)
 			{
 				print_state("died", &philo[i], data);
 				data->stop = true;
+				pthread_mutex_unlock(&data->monitor);
+				return (NULL);
 			}
-			if (j == data->philo_count)
-				data->stop = true;
-			i++;
+			if (data->meals_max >= 0 && philo[i].meals_eaten >= data->meals_max)
+				j++;
 			pthread_mutex_unlock(&data->monitor);
+			i++;
 		}
-		ft_usleep(1);
+		if (j == data->philo_count)
+		{
+			data->stop = true;
+			return (NULL);
+		}
+		ft_usleep(10);
 	}
 	return (NULL);
 }
@@ -92,6 +99,7 @@ void	init_data(t_data *data, t_philo *philo)
 		philo[i].l_fork = &data->fork[i];
 		philo[i].r_fork = &data->fork[(i + 1) % data->philo_count];
 		philo[i].data = data;
+		philo[i].print = true;
 		pthread_create(&philo[i].philo, NULL, routine, &philo[i]);
 		data->threads[i] = philo[i].philo;
 		i++;

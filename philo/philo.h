@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:58:29 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/03 19:01:59 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/03 09:50:51 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,9 @@ typedef struct s_data
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
 	pthread_mutex_t	monitor;
-	pthread_mutex_t	waiter;
 	pthread_t		*threads;
 	bool			stop;
-	long			first_fork;
-	long			second_fork;
+	bool			start;
 	ssize_t			philo_count;
 	ssize_t			time_to_die;
 	ssize_t			time_to_eat;
@@ -43,6 +41,7 @@ typedef struct s_philo
 {
 	int				id;
 	pthread_t		philo;
+	bool			print;
 	ssize_t			meals_eaten;
 	ssize_t			last_meal;
 	pthread_mutex_t	*l_fork;

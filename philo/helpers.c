@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:10:40 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/03 16:00:14 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/04 22:47:17 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ long	ft_atoi(char *arg)
 
 void	print_state(char *msg, t_philo *philo, t_data *data)
 {
-	if (!data->stop)
+	if (!data->stop && philo->print)
 	{
 		pthread_mutex_lock(&data->print);
 		if (!data->stop)
