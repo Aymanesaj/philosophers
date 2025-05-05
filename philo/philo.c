@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:57:39 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/04 22:50:58 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/05 12:13:41 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ int	main(int ac, char **av)
 	memset(&data, 0, sizeof(t_data));
 	if (init_philo(ac, av, &data))
 		return (1);
-	data.start_time = get_current_time(NULL);
+	if (!data.philo_count)
+		return (0);
 	pthread_mutex_init(&data.print, NULL);
-	pthread_mutex_init(&data.monitor, NULL);
+	pthread_mutex_init(&data.mtx_monitor, NULL);
 	philo = malloc(sizeof(t_philo) * data.philo_count);
 	init_data(&data, philo);
 	free(data.threads);
@@ -30,7 +31,7 @@ int	main(int ac, char **av)
 	int (i);
 	i = 0;
 	while (i < data.philo_count)
-	pthread_mutex_destroy(&data.fork[i++]);
+		pthread_mutex_destroy(&data.fork[i++]);
 	pthread_mutex_destroy(&data.print);
 	free(data.fork);
 }
