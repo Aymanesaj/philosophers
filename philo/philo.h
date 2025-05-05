@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:58:29 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/05 11:51:59 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/05 20:52:11 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct s_data
 	pthread_t		monitor;
 	pthread_mutex_t	mtx_monitor;
 	pthread_t		*threads;
-	bool			stop;
+	volatile bool	stop;
 	ssize_t			philo_count;
 	ssize_t			time_to_die;
 	ssize_t			time_to_eat;

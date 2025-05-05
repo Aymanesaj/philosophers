@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:10:40 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/05 12:17:27 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/05 21:05:28 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,33 @@ void	print_state(char *msg, t_philo *philo, t_data *data)
 			printf("%zu %d %s\n", get_current_time(data), philo->id, msg);
 		pthread_mutex_unlock(&data->print);
 	}
+}
+
+int	init_philo(int ac, char **av, t_data *philo)
+{
+	if (ac < 5 || ac > 6)
+		return (printf("Error\n"), 1);
+	philo->philo_count = ft_atoi(av[1]);
+	if (philo->philo_count == -1)
+		return (printf("Error\n"), 1);
+	philo->time_to_die = ft_atoi(av[2]);
+	if (philo->time_to_die == -1)
+		return (printf("Error\n"), 1);
+	philo->time_to_eat = ft_atoi(av[3]);
+	if (philo->time_to_eat == -1)
+		return (printf("Error\n"), 1);
+	philo->time_to_sleep = ft_atoi(av[4]);
+	if (philo->time_to_sleep == -1)
+		return (printf("Error\n"), 1);
+	philo->meals_max = ft_atoi(av[5]);
+	if (philo->meals_max == -1 && av[5])
+		return (printf("Error\n"), 1);
+	philo->fork = malloc(sizeof(pthread_mutex_t) * philo->philo_count);
+	if (!philo->fork)
+		return (perror(""), 1);
+	int (i);
+	i = 0;
+	while (i < philo->philo_count)
+		pthread_mutex_init(&philo->fork[i++], NULL);
+	return (0);
 }
