@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:08:05 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/06 20:09:41 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/06 20:11:44 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ void	*monitoring(void *arg)
 			data->stop = true;
 			return (NULL);
 		}
-		usleep(10);
 	}
 	return (NULL);
 }
