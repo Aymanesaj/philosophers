@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:10:40 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/06 20:10:41 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/06 18:42:21 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,22 +72,22 @@ void	print_state(char *msg, t_philo *philo, t_data *data)
 int	init_philo(int ac, char **av, t_data *philo)
 {
 	if (ac < 5 || ac > 6)
-		return (write(2, "Error\n", 6), 1);
+		return (printf("Error\n"), 1);
 	philo->philo_count = ft_atoi(av[1]);
 	if (philo->philo_count <= 0)
-		return (write(2, "Error\n", 6), 1);
+		return (printf("Error\n"), 1);
 	philo->time_to_die = ft_atoi(av[2]);
 	if (philo->time_to_die == -1)
-		return (write(2, "Error\n", 6), 1);
+		return (printf("Error\n"), 1);
 	philo->time_to_eat = ft_atoi(av[3]);
 	if (philo->time_to_eat == -1)
-		return (write(2, "Error\n", 6), 1);
+		return (printf("Error\n"), 1);
 	philo->time_to_sleep = ft_atoi(av[4]);
 	if (philo->time_to_sleep == -1)
-		return (write(2, "Error\n", 6), 1);
+		return (printf("Error\n"), 1);
 	philo->meals_max = ft_atoi(av[5]);
 	if (philo->meals_max == -1 && av[5])
-		return (write(2, "Error\n", 6), 1);
+		return (printf("Error\n"), 1);
 	philo->fork = malloc(sizeof(pthread_mutex_t) * philo->philo_count);
 	if (!philo->fork)
 		return (perror(""), 1);

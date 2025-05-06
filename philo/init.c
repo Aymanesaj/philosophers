@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:08:05 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/05 21:05:21 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/06 20:09:41 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,16 @@ void	*routine(void *arg)
 
 int	check_philo_state(t_philo *philo, t_data *data)
 {
+	ssize_t	time;
+
 	int (i), (j);
 	i = 0;
 	j = 0;
 	while (i < data->philo_count)
 	{
 		pthread_mutex_lock(&data->mtx_monitor);
-		if (get_current_time(data)
-			- philo[i].last_meal >= data->time_to_die)
+		time = get_current_time(data);
+		if (time - philo[i].last_meal > data->time_to_die)
 		{
 			print_state("died", &philo[i], data);
 			data->stop = true;
@@ -94,7 +96,7 @@ void	*monitoring(void *arg)
 			data->stop = true;
 			return (NULL);
 		}
-		ft_usleep(10, data);
+		usleep(10);
 	}
 	return (NULL);
 }
