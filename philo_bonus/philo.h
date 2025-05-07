@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:58:29 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/05 22:10:18 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/08 00:05:47 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,18 @@
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <fcntl.h>
+# include <wait.h>
+# include <semaphore.h>
 
 typedef struct s_data
 {
-	pthread_mutex_t	*fork;
-	pthread_mutex_t	print;
-	pthread_mutex_t	mtx_room;
+	int				id;
+	int				exit;
+	sem_t			*forks;
+	sem_t			*print;
+	sem_t			*meal;
 	pthread_t		monitor;
-	pthread_mutex_t	mtx_monitor;
-	int				room_count;
-	pthread_t		*threads;
 	volatile bool	stop;
 	ssize_t			philo_count;
 	ssize_t			time_to_die;
@@ -37,24 +39,15 @@ typedef struct s_data
 	ssize_t			time_to_sleep;
 	ssize_t			meals_max;
 	ssize_t			start_time;
-}					t_data;
-
-typedef struct s_philo
-{
-	int				id;
-	pthread_t		philo;
 	ssize_t			meals_eaten;
 	ssize_t			last_meal;
-	pthread_mutex_t	*f_fork;
-	pthread_mutex_t	*s_fork;
-	t_data			*data;
-}					t_philo;
+}					t_data;
 
 int					init_philo(int ac, char **av, t_data *philo);
-void				init_data(t_data *data, t_philo *philo);
 int					ft_usleep(size_t milliseconds, t_data *data);
 long				ft_atoi(char *arg);
-void				print_state(char *msg, t_philo *philo, t_data *data);
+void				print_state(char *msg, t_data *data);
 ssize_t				get_current_time(t_data *philo);
+void				philo_lifecycle(t_data *data);
 
 #endif

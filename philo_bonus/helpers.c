@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:10:40 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/06 18:42:21 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/07 23:14:16 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,14 @@ long	ft_atoi(char *arg)
 	return (num);
 }
 
-void	print_state(char *msg, t_philo *philo, t_data *data)
+void	print_state(char *msg, t_data *data)
 {
 	if (!data->stop)
 	{
-		pthread_mutex_lock(&data->print);
+		sem_wait(data->print);
 		if (!data->stop)
-			printf("%zu %d %s\n", get_current_time(data), philo->id, msg);
-		pthread_mutex_unlock(&data->print);
+			printf("%zu %d %s\n", get_current_time(data), data->id, msg);
+		sem_post(data->print);
 	}
 }
 
@@ -88,12 +88,5 @@ int	init_philo(int ac, char **av, t_data *philo)
 	philo->meals_max = ft_atoi(av[5]);
 	if (philo->meals_max == -1 && av[5])
 		return (printf("Error\n"), 1);
-	philo->fork = malloc(sizeof(pthread_mutex_t) * philo->philo_count);
-	if (!philo->fork)
-		return (perror(""), 1);
-	int (i);
-	i = 0;
-	while (i < philo->philo_count)
-		pthread_mutex_init(&philo->fork[i++], NULL);
 	return (0);
 }
