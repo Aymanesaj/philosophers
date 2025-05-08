@@ -6,11 +6,60 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:57:39 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/08 00:05:40 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/08 23:25:26 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	*signaling(void *arg)
+{
+	t_data	*data;
+
+	data = (t_data *)arg;
+	sem_wait(data->terminate);
+	sem_wait(data->meal);
+	data->stop = true;
+	sem_post(data->meal);
+	return (NULL);
+}
+
+void	catch_signals(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->philo_count)
+	{
+		sem_wait(data->done);
+		i++;
+	}
+	while (i)
+	{
+		sem_post(data->terminate);
+		i--;
+	}
+}
+
+void	ft_exit(t_data *data)
+{
+	sem_close(data->forks);
+	sem_close(data->print);
+	sem_close(data->meal);
+	sem_close(data->room);
+	sem_close(data->done);
+	sem_close(data->terminate);
+	sem_close(data->death);
+	sem_unlink("/forks");
+	sem_unlink("/print");
+	sem_unlink("/meal");
+	sem_unlink("/room");
+	sem_unlink("/term");
+	sem_unlink("/done");
+	sem_unlink("/death");
+	free(data->pids);
+	exit(0);
+}
 
 void	fork_philos(t_data *data)
 {
@@ -19,26 +68,23 @@ void	fork_philos(t_data *data)
 	int	status;
 
 	i = 0;
-	id = 0;
-	status = 0;
+	data->pids = malloc(data->philo_count * sizeof(pid_t));
 	while (i < data->philo_count)
 	{
 		data->id = i + 1;
-		id = fork();
-		if (id == -1)
+		data->pids[i] = fork();
+		if (data->pids[i] == -1)
 			(perror("")), (exit(EXIT_FAILURE));
-		if (!id)
+		if (!data->pids[i])
 			philo_lifecycle(data);
 		i++;
 	}
-	while (wait(&status) > 0)
-		;
+	catch_signals(data);
+	i = -1;
+	id = 1;
+	while (id > 0)
+		id = waitpid(-1, &status, 0);
 }
-	/* {
-		if (WIFEXITED(status))
-			if (WEXITSTATUS(status));
-				kill_all_children();
-	}*/
 
 int	main(int ac, char **av)
 {
@@ -50,14 +96,17 @@ int	main(int ac, char **av)
 	sem_unlink("/forks");
 	sem_unlink("/print");
 	sem_unlink("/meal");
+	sem_unlink("/room");
+	sem_unlink("/term");
+	sem_unlink("/done");
+	sem_unlink("/death");
 	data.forks = sem_open("/forks", O_CREAT, 0644, data.philo_count);
+	data.room = sem_open("/room", O_CREAT, 0644, data.philo_count - 1);
 	data.print = sem_open("/print", O_CREAT, 0644, 1);
 	data.meal = sem_open("/meal", O_CREAT, 0644, 1);
+	data.terminate = sem_open("/term", O_CREAT, 0644, 0);
+	data.done = sem_open("/done", O_CREAT, 0644, 0);
+	data.death = sem_open("/death", O_CREAT, 0644, 1);
 	fork_philos(&data);
-	sem_close(data.forks);
-	sem_close(data.print);
-	sem_close(data.meal);
-	sem_unlink("/forks");
-	sem_unlink("/print");
-	sem_unlink("/meal");
+	ft_exit(&data);
 }

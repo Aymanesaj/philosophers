@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:10:40 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/07 23:14:16 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/08 23:48:05 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ int	ft_usleep(size_t milliseconds, t_data *data)
 	size_t	start;
 
 	start = get_current_time(data);
-	while (((get_current_time(data) - start) < milliseconds) && !data->stop)
-		usleep(50);
+	while (((get_current_time(data) - start) < milliseconds)
+		&& !check_state(data))
+		usleep(100);
 	return (0);
 }
 
@@ -60,10 +61,10 @@ long	ft_atoi(char *arg)
 
 void	print_state(char *msg, t_data *data)
 {
-	if (!data->stop)
+	if (!check_state(data))
 	{
 		sem_wait(data->print);
-		if (!data->stop)
+		if (!check_state(data))
 			printf("%zu %d %s\n", get_current_time(data), data->id, msg);
 		sem_post(data->print);
 	}
@@ -72,21 +73,21 @@ void	print_state(char *msg, t_data *data)
 int	init_philo(int ac, char **av, t_data *philo)
 {
 	if (ac < 5 || ac > 6)
-		return (printf("Error\n"), 1);
+		return (write(2, "Error\n", 6), 1);
 	philo->philo_count = ft_atoi(av[1]);
 	if (philo->philo_count <= 0)
-		return (printf("Error\n"), 1);
+		return (write(2, "Error\n", 6), 1);
 	philo->time_to_die = ft_atoi(av[2]);
 	if (philo->time_to_die == -1)
-		return (printf("Error\n"), 1);
+		return (write(2, "Error\n", 6), 1);
 	philo->time_to_eat = ft_atoi(av[3]);
 	if (philo->time_to_eat == -1)
-		return (printf("Error\n"), 1);
+		return (write(2, "Error\n", 6), 1);
 	philo->time_to_sleep = ft_atoi(av[4]);
 	if (philo->time_to_sleep == -1)
-		return (printf("Error\n"), 1);
+		return (write(2, "Error\n", 6), 1);
 	philo->meals_max = ft_atoi(av[5]);
 	if (philo->meals_max == -1 && av[5])
-		return (printf("Error\n"), 1);
+		return (write(2, "Error\n", 6), 1);
 	return (0);
 }
