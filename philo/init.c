@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:08:05 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/06 20:11:44 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/10 09:30:03 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 	data = philo->data;
-	while (!data->stop)
+	while (!check_state(data))
 	{
 		if (lock_forks(data, philo))
 			return (NULL);
@@ -66,7 +66,9 @@ int	check_philo_state(t_philo *philo, t_data *data)
 		if (time - philo[i].last_meal > data->time_to_die)
 		{
 			print_state("died", &philo[i], data);
-			data->stop = true;
+			pthread_mutex_lock(&data->stop);
+			data->stop_simulation = true;
+			pthread_mutex_unlock(&data->stop);
 			pthread_mutex_unlock(&data->mtx_monitor);
 			return (-1);
 		}
@@ -86,14 +88,16 @@ void	*monitoring(void *arg)
 	philo = (t_philo *)arg;
 	data = philo[0].data;
 	int (j);
-	while (!data->stop)
+	while (!data->stop_simulation)
 	{
 		j = check_philo_state(philo, data);
 		if (j == -1)
 			return (NULL);
 		if (j == data->philo_count)
 		{
-			data->stop = true;
+			pthread_mutex_lock(&data->stop);
+			data->stop_simulation = true;
+			pthread_mutex_unlock(&data->stop);
 			return (NULL);
 		}
 	}

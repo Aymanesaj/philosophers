@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:10:40 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/06 20:10:41 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/10 09:37:08 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int	ft_usleep(size_t milliseconds, t_data *data)
 	size_t	start;
 
 	start = get_current_time(data);
-	while (((get_current_time(data) - start) < milliseconds) && !data->stop)
+	while (((get_current_time(data) - start) < milliseconds)
+		&& !check_state(data))
 		usleep(50);
 	return (0);
 }
@@ -60,10 +61,10 @@ long	ft_atoi(char *arg)
 
 void	print_state(char *msg, t_philo *philo, t_data *data)
 {
-	if (!data->stop)
+	if (!check_state(data))
 	{
 		pthread_mutex_lock(&data->print);
-		if (!data->stop)
+		if (!check_state(data))
 			printf("%zu %d %s\n", get_current_time(data), philo->id, msg);
 		pthread_mutex_unlock(&data->print);
 	}

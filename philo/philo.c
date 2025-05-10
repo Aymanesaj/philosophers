@@ -6,11 +6,23 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:57:39 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/05 12:13:41 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/10 09:28:15 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	check_state(t_data *data)
+{
+	pthread_mutex_lock(&data->stop);
+	if (data->stop_simulation)
+	{
+		pthread_mutex_unlock(&data->stop);
+		return (1);
+	}
+	pthread_mutex_unlock(&data->stop);
+	return (0);
+}
 
 int	main(int ac, char **av)
 {
@@ -24,6 +36,7 @@ int	main(int ac, char **av)
 		return (0);
 	pthread_mutex_init(&data.print, NULL);
 	pthread_mutex_init(&data.mtx_monitor, NULL);
+	pthread_mutex_init(&data.stop, NULL);
 	philo = malloc(sizeof(t_philo) * data.philo_count);
 	init_data(&data, philo);
 	free(data.threads);
@@ -33,5 +46,7 @@ int	main(int ac, char **av)
 	while (i < data.philo_count)
 		pthread_mutex_destroy(&data.fork[i++]);
 	pthread_mutex_destroy(&data.print);
+	pthread_mutex_destroy(&data.stop);
+	pthread_mutex_destroy(&data.mtx_monitor);
 	free(data.fork);
 }
