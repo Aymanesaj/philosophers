@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:58:29 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/08 23:25:09 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/10 18:47:01 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_data
 	sem_t			*terminate;
 	sem_t			*meal;
 	sem_t			*death;
+	sem_t			*sig;
 	pthread_t		monitor;
 	pthread_t		signaler;
 	volatile bool	stop;

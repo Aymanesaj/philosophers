@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:08:05 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/10 09:30:03 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/10 17:12:55 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	*routine(void *arg)
 	data = philo->data;
 	while (!check_state(data))
 	{
+		if (philo->id % 2 == 1)
+			usleep(500);
 		if (lock_forks(data, philo))
 			return (NULL);
 		pthread_mutex_lock(&data->mtx_monitor);

@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:57:39 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/08 23:25:26 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/10 20:10:53 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	*signaling(void *arg)
 
 	data = (t_data *)arg;
 	sem_wait(data->terminate);
-	sem_wait(data->meal);
+	sem_wait(data->sig);
 	data->stop = true;
-	sem_post(data->meal);
+	sem_post(data->sig);
 	return (NULL);
 }
 
@@ -50,6 +50,7 @@ void	ft_exit(t_data *data)
 	sem_close(data->done);
 	sem_close(data->terminate);
 	sem_close(data->death);
+	sem_close(data->sig);
 	sem_unlink("/forks");
 	sem_unlink("/print");
 	sem_unlink("/meal");
@@ -57,6 +58,7 @@ void	ft_exit(t_data *data)
 	sem_unlink("/term");
 	sem_unlink("/done");
 	sem_unlink("/death");
+	sem_unlink("/sig");
 	free(data->pids);
 	exit(0);
 }
@@ -69,6 +71,7 @@ void	fork_philos(t_data *data)
 
 	i = 0;
 	data->pids = malloc(data->philo_count * sizeof(pid_t));
+	data->start_time = get_current_time(NULL);
 	while (i < data->philo_count)
 	{
 		data->id = i + 1;
@@ -100,13 +103,15 @@ int	main(int ac, char **av)
 	sem_unlink("/term");
 	sem_unlink("/done");
 	sem_unlink("/death");
+	sem_unlink("/sig");
 	data.forks = sem_open("/forks", O_CREAT, 0644, data.philo_count);
-	data.room = sem_open("/room", O_CREAT, 0644, data.philo_count - 1);
+	data.room = sem_open("/room", O_CREAT, 0644, 1);
 	data.print = sem_open("/print", O_CREAT, 0644, 1);
 	data.meal = sem_open("/meal", O_CREAT, 0644, 1);
 	data.terminate = sem_open("/term", O_CREAT, 0644, 0);
 	data.done = sem_open("/done", O_CREAT, 0644, 0);
 	data.death = sem_open("/death", O_CREAT, 0644, 1);
+	data.sig = sem_open("/sig", O_CREAT, 0644, 1);
 	fork_philos(&data);
 	ft_exit(&data);
 }

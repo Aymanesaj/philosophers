@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:10:40 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/10 09:37:08 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/10 18:17:56 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	ft_usleep(size_t milliseconds, t_data *data)
 	start = get_current_time(data);
 	while (((get_current_time(data) - start) < milliseconds)
 		&& !check_state(data))
-		usleep(50);
+		usleep(100);
 	return (0);
 }
 

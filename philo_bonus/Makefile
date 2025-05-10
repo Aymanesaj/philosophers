@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror
 SRC= helpers.c init.c philo.c
 OBJ= $(SRC:.c=.o)
 NAME= philo_bonus
