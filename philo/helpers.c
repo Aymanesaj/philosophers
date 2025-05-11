@@ -6,7 +6,7 @@
 /*   By: asajed <asajed@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:10:40 by asajed            #+#    #+#             */
-/*   Updated: 2025/05/10 18:17:56 by asajed           ###   ########.fr       */
+/*   Updated: 2025/05/11 13:54:18 by asajed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	init_philo(int ac, char **av, t_data *philo)
 		return (write(2, "Error\n", 6), 1);
 	philo->fork = malloc(sizeof(pthread_mutex_t) * philo->philo_count);
 	if (!philo->fork)
-		return (perror(""), 1);
+		return (1);
 	int (i);
 	i = 0;
 	while (i < philo->philo_count)
